@@ -1,8 +1,9 @@
 import 'dart:async';
 
+import 'package:Temfer/constants/app_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:Temfer/screens/home_Screen.dart';
+import 'package:Temfer/screens/home_screen.dart';
 import 'package:Temfer/theme/theme.dart';
 import 'package:Temfer/widgets/dot_loader.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -19,14 +20,14 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _navigateToPage() {
-   /* Navigator.pushReplacement(
-         context, MaterialPageRoute(builder: (context) => HomeScreen()));*/
+    Navigator.pushReplacement(
+         context, MaterialPageRoute(builder: (context) => HomeScreen()));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black45,
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Flex(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -48,9 +49,12 @@ class _SplashScreenState extends State<SplashScreen> {
                   SizedBox(
                     height: 30,
                   ),
-                  Text(
-                    "Temfer",
-                    style: appNameText,
+                  Hero(
+                    tag: headingHeroTag,
+                    child: Text(
+                      "Temfer",
+                      style: appNameText,
+                    ),
                   ),
                   SizedBox(
                     height: 10,

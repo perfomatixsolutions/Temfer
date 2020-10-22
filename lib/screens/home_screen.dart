@@ -1,15 +1,16 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:Temfer/constants/api_data.dart';
 import 'package:Temfer/constants/app_constants.dart';
 import 'package:Temfer/models/weather_model.dart';
 import 'package:Temfer/repo/weather_update_repo.dart';
+import 'package:Temfer/screens/search_location.dart';
 import 'package:Temfer/theme/theme.dart';
 import 'package:Temfer/widgets/dot_loader.dart';
 import 'package:Temfer/widgets/login_background_painter.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
@@ -42,6 +43,11 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _navigateToPage() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => SearchLocation()));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -63,21 +69,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
     //final weatherBloc = BlocProvider.of<WeatherBloc>(context);
 
-
-
-
-
     return Scaffold(
-        backgroundColor: Colors.black87,
-        appBar: AppBar(
-          backgroundColor: Colors.black87,
-          elevation: 0,
-          title: Text(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Hero(
+          tag: headingHeroTag,
+          child: Text(
             "Temfer",
             style: headingText,
           ),
         ),
-        body: Stack(
+      ),
+      body: SafeArea(
+        maintainBottomViewPadding: true,
+        child: Stack(
           children: [
             Align(
               alignment: Alignment.bottomCenter,
@@ -120,43 +127,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         physics: AlwaysScrollableScrollPhysics(),
                         child: Column(
                           children: [
-                            /*Padding(
-                              padding:
-                                  const EdgeInsets.only(right: 20,left: 20,top: 60),
-                              child: Material(
-                                borderRadius: BorderRadius.circular(35),
-                                child: TextField(
-                                  enabled: false,
-                                  controller: TextEditingController(text: " ${snapshot.data.name}"),
-                                  decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: "Location",
-                                      contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 16, vertical: 15),
-                                      suffixIcon: Padding(
-                                        padding: const EdgeInsets.all(6.0),
-                                        child: Material(
-                                          elevation: 7,
-                                          child:
-                                              Icon(Icons.search),
-                                          borderRadius:
-                                              BorderRadius.circular(35),
-                                          textStyle: feelsLikeText,
-                                        ),
-                                      )),
-                                ),
-                              ),
-                            ),*/
                             SizedBox(
                               height: 30,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  Icons.location_on,
-                                  color: Colors.red,
-                                  size: 21,
+                                Hero(
+                                  tag: locationHeroTag,
+                                  child: Icon(
+                                    Icons.location_on,
+                                    color: Colors.red,
+                                    size: 21,
+                                  ),
                                 ),
                                 Text(" ${snapshot.data.name}",
                                     style: locationText),
@@ -166,28 +149,27 @@ class _HomeScreenState extends State<HomeScreen> {
                               height: 60,
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 0.0, top: 15),
+                              padding: const EdgeInsets.only(left: 0.0, top: 15),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
                                     FontAwesomeIcons.thermometerEmpty,
                                     size: 40,
-                                    color: Colors.white,
+                                    color: Colors.black87,
                                   ),
                                   SizedBox(
                                     width: 10,
                                   ),
 
                                   /*Icon(
-                                  CupertinoIcons.brightness_solid,
-                                  size: 130,
-                                  color: Colors.white.withOpacity(.84),
-                                ),*/
+                                    CupertinoIcons.brightness_solid,
+                                    size: 130,
+                                    color: Colors.white.withOpacity(.84),
+                                  ),*/
                                   (snapshot.data != null)
                                       ? Text(
-                                          "${((snapshot.data.main.temp) - AppConstants.kelvinConst).round()}°C",
+                                          "${((snapshot.data.main.temp) -  kelvinConst).round()}°C",
                                           style: weatherText,
                                         )
                                       : Text(
@@ -198,11 +180,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             SizedBox(
-                              height: 20,
+                              height: 80,
                             ),
                             if (snapshot.hasData)
                               Text(
-                                "Feels like ${((snapshot.data.main.feels_like) - AppConstants.kelvinConst).round()}°C",
+                                "Feels like ${((snapshot.data.main.feels_like) - kelvinConst).round()}°C",
                                 style: feelsLikeText,
                               ),
                             SizedBox(
@@ -217,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       height: 35,
                                       width: 35,
                                       scale: .5,
-                                      color: Colors.white,
+                                      color: Colors.black87,
                                     ),
                                   SizedBox(
                                     width: 5,
@@ -238,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Icon(
                                   Icons.opacity,
                                   size: 16,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                                 SizedBox(
                                   width: 5,
@@ -261,6 +243,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                 })
           ],
-        ));
+        ),
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 50.0, right: 30),
+        child: FloatingActionButton(
+          heroTag:  searchLocationHeroTag,
+          elevation: 4,
+          onPressed: _navigateToPage,
+          child: Icon(
+            Icons.location_on_outlined,
+            color: Colors.amber,
+          ),
+          backgroundColor: Colors.white,
+        ),
+      ),
+    );
   }
 }
